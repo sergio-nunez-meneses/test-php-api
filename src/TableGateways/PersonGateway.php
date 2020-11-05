@@ -85,4 +85,34 @@ class PersonGateway
       exit($e->getMessage());
     }
   }
+
+  public function update($id, Array $input)
+  {
+    $sql = "UPDATE person SET firstname = :firstname, lastname  = :lastname, firstparent_id = :firstparent_id, secondparent_id = :secondparent_id WHERE id = :id";
+
+    try
+    {
+      $stmt = $this->db->prepare($sql);
+      $stmt->execute([
+        'id' => $id,
+        'firstname' => $input['firstname'],
+        'lastname' => $input['lastname'],
+        'firstparent_id' => $input['firstparent_id'] ?? null,
+        'secondparent_id' => $input['secondparent_id'] ?? null
+      ]);
+      $res = $stmt->rowCount();
+
+      if ($res > 0)
+      {
+        $response['status_code_header'] = 'HTTP/1.1 200 OK';
+        $response['body'] = json_encode(['user' => 'updated']);
+        return $response;
+      }
+    }
+    catch (\PDOException $e)
+    {
+      exit($e->getMessage());
+    }
+
+  }
 }

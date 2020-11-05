@@ -26,6 +26,10 @@ if ($uri[1] === 'person') {
     }
   } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $response = $personGateway->insert($_POST);
+  } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    $user_id = $uri[2];
+    parse_str(file_get_contents('php://input') , $output);
+    $response = $personGateway->update($user_id, $output);
   }
 
   if (isset($response) && $response['body']) {
@@ -35,7 +39,3 @@ if ($uri[1] === 'person') {
   header('HTTP/1.1 404 Not Found');
   exit();
 }
-
-// $user_id = $users['user_id'];
-// $stmt = $this->run_query('SELECT username FROM users WHERE user_id = :user_id', ['user_id' => $user_id]);
-// $username = $stmt->fetch();
