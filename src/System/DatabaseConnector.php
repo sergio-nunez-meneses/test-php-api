@@ -1,7 +1,9 @@
 <?php
 namespace Src\System;
 
-class DatabaseConnector {
+class DatabaseConnector
+{
+
   private $dbConnection = null;
 
   public function __construct()
@@ -19,7 +21,7 @@ class DatabaseConnector {
         $user,
         $password
       );
-      echo "connected to $db";
+      // echo "connected to $db\n";
     }
     catch (\PDOException $e)
     {
