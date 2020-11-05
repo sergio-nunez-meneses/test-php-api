@@ -25,7 +25,7 @@ if ($uri[1] === 'person') {
       $response = $personGateway->findAll();
     }
   } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $response = $personGateway->insert($_POST);
+    $response = $personGateway->create($_POST);
   } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $user_id = $uri[2];
     parse_str(file_get_contents('php://input') , $output);

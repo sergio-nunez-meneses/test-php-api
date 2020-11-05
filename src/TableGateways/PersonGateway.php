@@ -60,7 +60,7 @@ class PersonGateway
 
   }
 
-  public function insert(Array $input)
+  public function create(Array $input)
   {
     $sql = "INSERT INTO person (firstname, lastname, firstparent_id, secondparent_id) VALUES (:firstname, :lastname, :firstparent_id, :secondparent_id)";
 
