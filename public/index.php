@@ -11,7 +11,7 @@ header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = explode('/', $uri);
-$userId = null;
+$user_id = null;
 
 // route requests
 if ($uri[1] === 'person') {
@@ -19,7 +19,8 @@ if ($uri[1] === 'person') {
 
   if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (isset($uri[2])) {
-      $response = $personGateway->findOne(2);
+      $user_id = $uri[2];
+      $response = $personGateway->findOne($user_id);
     } else {
       $response = $personGateway->findAll();
     }
