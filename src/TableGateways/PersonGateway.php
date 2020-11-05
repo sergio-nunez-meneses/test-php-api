@@ -11,17 +11,11 @@ class PersonGateway
     $this->db = $db;
   }
 
-  public function to_json($result)
+  public function to_json($data)
   {
-    if (is_array($result)) {
-      if (count($result) > 0) {
-        $response['status_code_header'] = 'HTTP/1.1 200 OK';
-        $response['body'] = json_encode($result);
-        return $response;
-      }
-    } else {
-      $response['status_code_header'] = 'HTTP/1.1 201 Created';
-      $response['body'] = json_encode(['user' => 'created']);
+    if (count($data) > 0) {
+      $response['status_code_header'] = 'HTTP/1.1 200 OK';
+      $response['body'] = json_encode($data);
       return $response;
     }
   }
@@ -77,7 +71,9 @@ class PersonGateway
 
       if ($res > 0)
       {
-        return $this->to_json($res);
+        $response['status_code_header'] = 'HTTP/1.1 201 Created';
+        $response['body'] = json_encode(['user' => 'created']);
+        return $response;
       }
     }
     catch (\PDOException $e)
@@ -113,6 +109,28 @@ class PersonGateway
     {
       exit($e->getMessage());
     }
+  }
 
+  public function delete($id)
+  {
+    $sql = "DELETE FROM person WHERE id = :id";
+
+    try
+    {
+      $stmt = $this->db->prepare($sql);
+      $stmt->execute(['id' => $id]);
+      $res = $stmt->rowCount();
+
+      if ($res > 0)
+      {
+        $response['status_code_header'] = 'HTTP/1.1 200 OK';
+        $response['body'] = json_encode(['user' => 'deleted']);
+        return $response;
+      }
+    }
+    catch (\PDOException $e)
+    {
+      exit($e->getMessage());
+    }
   }
 }

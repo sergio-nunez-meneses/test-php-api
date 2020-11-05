@@ -30,9 +30,13 @@ if ($uri[1] === 'person') {
     $user_id = $uri[2];
     parse_str(file_get_contents('php://input') , $output);
     $response = $personGateway->update($user_id, $output);
+  } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    $user_id = $uri[2];
+    $response = $personGateway->delete($user_id);
   }
 
   if (isset($response) && $response['body']) {
+    header($response['status_code_header']);
     echo $response['body'];
   }
 } else {
