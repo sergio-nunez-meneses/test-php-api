@@ -11,11 +11,17 @@ class PersonGateway
     $this->db = $db;
   }
 
-  public function to_json($array = [])
+  public function to_json($result)
   {
-    if (count($array) > 0) {
-      $response['status_code_header'] = 'HTTP/1.1 200 OK';
-      $response['body'] = json_encode($array);
+    if (is_array($result)) {
+      if (count($result) > 0) {
+        $response['status_code_header'] = 'HTTP/1.1 200 OK';
+        $response['body'] = json_encode($result);
+        return $response;
+      }
+    } else {
+      $response['status_code_header'] = 'HTTP/1.1 201 Created';
+      $response['body'] = json_encode(['user' => 'created']);
       return $response;
     }
   }
@@ -40,14 +46,43 @@ class PersonGateway
   {
     $sql = "SELECT * FROM person WHERE id =:id";
 
-    try {
+    try
+    {
       $stmt = $this->db->prepare($sql);
       $stmt->execute(['id' => $id]);
       $res = $stmt->fetchAll(\PDO::FETCH_ASSOC);
       return $this->to_json($res);
-    } catch (\PDOException $e) {
+    }
+    catch (\PDOException $e)
+    {
       exit($e->getMessage());
     }
 
+  }
+
+  public function insert(Array $input)
+  {
+    $sql = "INSERT INTO person (firstname, lastname, firstparent_id, secondparent_id) VALUES (:firstname, :lastname, :firstparent_id, :secondparent_id)";
+
+    try
+    {
+      $stmt = $this->db->prepare($sql);
+      $stmt->execute([
+        'firstname' => $input['firstname'],
+        'lastname' => $input['lastname'],
+        'firstparent_id' => $input['firstparent_id'] ?? null,
+        'secondparent_id' => $input['secondparent_id'] ?? null
+      ]);
+      $res = $stmt->rowCount();
+
+      if ($res > 0)
+      {
+        return $this->to_json($res);
+      }
+    }
+    catch (\PDOException $e)
+    {
+      exit($e->getMessage());
+    }
   }
 }

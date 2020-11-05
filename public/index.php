@@ -24,12 +24,18 @@ if ($uri[1] === 'person') {
     } else {
       $response = $personGateway->findAll();
     }
+  } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $response = $personGateway->insert($_POST);
   }
 
-  if ($response['body']) {
+  if (isset($response) && $response['body']) {
     echo $response['body'];
   }
 } else {
   header('HTTP/1.1 404 Not Found');
   exit();
 }
+
+// $user_id = $users['user_id'];
+// $stmt = $this->run_query('SELECT username FROM users WHERE user_id = :user_id', ['user_id' => $user_id]);
+// $username = $stmt->fetch();
