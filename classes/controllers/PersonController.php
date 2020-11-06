@@ -19,20 +19,25 @@ class PersonController
           $response = $person_model->findAll();
         };
         break;
+        
       case 'POST':
         $response = $person_model->create($_POST);
         break;
+        
       case 'PUT':
       parse_str(file_get_contents('php://input') , $output);
       $response = $person_model->update($user_id, $output);
           break;
+          
       case 'DELETE':
           $response = $person_model->delete($user_id);
           break;
+          
       default:
           // $response = $this->error_response();
           header('HTTP/1.1 404 Not Found');
           break;
+          
     }
     if (isset($response) && $response['body'])
     {

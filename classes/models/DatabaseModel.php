@@ -20,18 +20,18 @@ abstract class DatabaseModel
     if (!empty($this->pdo))
     {
       // echo 'connected to ' . getenv('DB_DATABASE') . '.<br>'; // for debugging
-      return TRUE;
+      return true;
     }
     else
     {
       // echo "connection failed. <br>";
-      return FALSE;
+      return false;
     }
   }
 
   protected function run_query($sql, $placeholders = [])
   {
-    if ($this->connection() === TRUE)
+    if ($this->connection() === true)
     {
       if (empty($placeholders))
       {
@@ -50,23 +50,23 @@ abstract class DatabaseModel
   {
     $this->pdo = new PDO('mysql:host=' . DB_HOST . ';charset=' . DB_CHAR, DB_USER, DB_PWD);
 
-    if (empty($this->pdo) === FALSE)
+    if (empty($this->pdo) === false)
     {
       $this->pdo->exec('CREATE DATABASE IF NOT EXISTS' . DB_NAME);
       $result = $this->pdo->exec('use' . DB_NAME);
       // echo 'database ' . DB_DATABASE . 'created.<br>'; // for debugging
-      return TRUE;
+      return true;
     }
     else
     {
       echo 'failed creating database.<br>';
-      return FALSE;
+      return false;
     }
   }
 
   protected function create_table()
   {
-    if ($this->connection() === TRUE)
+    if ($this->connection() === true)
     {
       $this->table = 'person';
       $this->table_columns = "(
@@ -100,12 +100,12 @@ abstract class DatabaseModel
       $this->pdo->exec("DROP TABLE IF EXISTS $this->table");
       $this->pdo->exec("CREATE TABLE IF NOT EXISTS $this->table $this->table_columns");
       // echo "created table $this->table and columns $this->columns.<br>"; // for debugging
-      return TRUE;
+      return true;
     }
     else
     {
       echo 'failed creating table and columns.<br>';
-      return FALSE;
+      return false;
     }
   }
 
