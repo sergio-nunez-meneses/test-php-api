@@ -1,6 +1,7 @@
 <?php
 require_once('../include/class_autoloader.php');
 require('../tools/okta.php');
+use \Okta\JwtVerifier\JwtVerifierBuilder;
 
 // handle Cross origin resource sharing (CORS)
 header('Access-Control-Allow-Origin: *'); // allow all requests from all origins
@@ -32,8 +33,6 @@ if (!authenticate()) {
 PersonController::route_request($request_method, $user_id);
 
 function authenticate() {
-  echo $_SERVER['HTTP_AUTHORIZATION'] . '<br>';
-  echo $_SERVER['Authorization'] . '<br>';
   try {
     switch (true) {
       case array_key_exists('HTTP_AUTHORIZATION', $_SERVER):
@@ -48,16 +47,19 @@ function authenticate() {
         $auth_header = null;
         break;
     }
+
     preg_match('/Bearer\s(\S+)/', $auth_header, $matches);
 
     if (!isset($matches[1])) {
       throw new \Exception('No Bearer Token');
     }
+
     $jwt_verifier = (new \Okta\JwtVerifier\JwtVerifierBuilder())
       ->setIssuer(OKTAISSUER)
       ->setAudience(OKTAAUDIENCE)
       ->setClientId(OKTACLIENTID)
       ->build();
+
     return $jwt_verifier->verify($matches[1]);
   } catch (\Exception $e) {
     return false;
