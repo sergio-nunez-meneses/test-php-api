@@ -54,13 +54,16 @@ function authenticate() {
       throw new \Exception('No Bearer Token');
     }
 
-    $jwt_verifier = (new \Okta\JwtVerifier\JwtVerifierBuilder())
-      ->setIssuer(OKTAISSUER)
-      ->setAudience(OKTAAUDIENCE)
-      ->setClientId(OKTACLIENTID)
-      ->build();
+    // $jwt_verifier = (new \Okta\JwtVerifier\JwtVerifierBuilder())
+    //   ->setIssuer(OKTAISSUER)
+    //   ->setAudience(OKTAAUDIENCE)
+    //   ->setClientId(OKTACLIENTID)
+    //   ->build();
 
-    return $jwt_verifier->verify($matches[1]);
+    // return $jwt_verifier->verify($matches[1]);
+
+    var_dump($matches[1]);
+    return $matches[1];
   } catch (\Exception $e) {
     return false;
   }

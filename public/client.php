@@ -13,7 +13,7 @@ $get_token = obtain_token($issuer, $client_id, $client_secret, $scope);
 
 // test requests
 get_all_users($get_token);
-get_user($get_token, 1);
+get_user($get_token, 2);
 
 function obtain_token($issuer, $client_id, $client_secret, $scope) {
   echo "Obtaining token...\n";
@@ -58,7 +58,7 @@ function obtain_token($issuer, $client_id, $client_secret, $scope) {
       exit("Failed, exiting.\n");
     }
 
-    echo "Success!\n ";
+    echo "Success!\n";
     curl_close($ch);
     return $response['token_type'] . ' ' . $response['access_token'];
   } catch (\Exception $e) {
@@ -70,7 +70,7 @@ function obtain_token($issuer, $client_id, $client_secret, $scope) {
 }
 
 function get_all_users($token) {
-  echo 'Getting all users...';
+  echo "Getting all users...\n";
   $curl_opts = [
     CURLOPT_URL => 'http://127.0.0.1:8000/person',
     CURLOPT_HTTPHEADER => [
@@ -97,7 +97,7 @@ function get_all_users($token) {
 }
 
 function get_user($token, $id) {
-  echo "Getting user id#$id...";
+  echo "Getting user id#$id...\n";
   $curl_opts = [
     CURLOPT_URL => "http://127.0.0.1:8000/person/$id",
     CURLOPT_HTTPHEADER => [
