@@ -1,6 +1,9 @@
 {
   "require": {
-    "vlucas/phpdotenv": "^2.4"
+    "vlucas/phpdotenv": "^2.4",
+    "okta/jwt-verifier": "^1.0",
+    "spomky-labs/jose": "^7.1",
+    "guzzlehttp/psr7": "^1.7"
   },
   "autoload": {
     "psr-4": {

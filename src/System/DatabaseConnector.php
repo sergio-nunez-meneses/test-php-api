@@ -21,7 +21,6 @@ class DatabaseConnector
         $user,
         $password
       );
-      // echo "connected to $db"; // for debugging
     }
     catch (\PDOException $e)
     {
