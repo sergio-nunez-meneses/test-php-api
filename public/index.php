@@ -54,9 +54,7 @@ function authenticate() {
     throw new \Exception('No Bearer Token');
   }
 
-  // after installing different modules suggested in the following: error Uncaught Exception: Could not discover JWT Library, Please make sure one is included and the Adaptor is used in path\to\project\vendor\okta\jwt-verifier\src\Adaptors\AutoDiscover.php:34, JwtVerifierBuilder stopped working 
-
-  // $jwt = (new \Okta\JwtVerifier\JwtVerifierBuilder())
+  // $jwt = (new JwtVerifierBuilder())
   //   ->setIssuer(OKTAISSUER)
   //   ->setAudience(OKTAAUDIENCE)
   //   ->setClientId(OKTACLIENTID)
@@ -64,21 +62,20 @@ function authenticate() {
 
   try {
     // var_dump($jwt->verify($matches[1]));
+    // return $jwt->verify($matches[1]);
+
     list($header, $payload, $signature) = explode('.', $matches[1]);
 
     $plainHeader = base64_decode($header);
     echo "Header:\n$plainHeader\n\n";
-
     $plainPayload = base64_decode($payload);
     echo "Payload:\n$plainPayload\n\n";
-
     $plainSignature = base64_decode($signature);
     echo "Signature:\n$signature\n\n";
 
     $kid = json_decode($plainHeader, true);
     echo "kid:\n" . $kid['kid'] . "\n\n";
 
-    // return $jwt->verify($matches[1]);
     return true;
   } catch (\Exception $e) {
     return false;
