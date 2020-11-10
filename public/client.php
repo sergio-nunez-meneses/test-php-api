@@ -6,18 +6,18 @@ $client_secret = OKTASECRET;
 $scope = SCOPE;
 $issuer = OKTAISSUER;
 $curl_options = [];
-$get_token = obtain_token($issuer, $client_id, $client_secret, $scope);
+$token = obtain_token($issuer, $client_id, $client_secret, $scope);
 
 // test requests
-get_all_users($get_token);
-get_user($get_token, 2);
+get_all_users($token);
+get_user($token, 2);
 
 function obtain_token($issuer, $client_id, $client_secret, $scope) {
-  echo "Obtaining token...\n";
+  echo "Obtaining token...\n\n";
 
   // set up request
   $uri = $issuer . '/v1/token';
-  $token = base64_encode("$client_id:$client_secret");
+  $generate_token = base64_encode("$client_id:$client_secret");
   $payload = http_build_query([
     'grant_type' => 'client_credentials',
     'scope' => $scope
@@ -25,7 +25,7 @@ function obtain_token($issuer, $client_id, $client_secret, $scope) {
   $curl_opts = [
     CURLOPT_HTTPHEADER => [
       'Content-Type: application/x-www-form-urlencoded',
-      "Authorization: Basic $token"
+      "Authorization: Basic $generate_token"
     ],
     CURLOPT_POST => 1,
     CURLOPT_POSTFIELDS => $payload,
@@ -67,7 +67,7 @@ function obtain_token($issuer, $client_id, $client_secret, $scope) {
 }
 
 function get_all_users($token) {
-  echo "Getting all users...\n";
+  echo "Getting all users...\n\n";
   $curl_opts = [
     CURLOPT_URL => 'http://127.0.0.1:8000/person',
     CURLOPT_HTTPHEADER => [
@@ -94,7 +94,7 @@ function get_all_users($token) {
 }
 
 function get_user($token, $id) {
-  echo "Getting user id#$id...\n";
+  echo "Getting user id#$id...\n\n";
   $curl_opts = [
     CURLOPT_URL => "http://127.0.0.1:8000/person/$id",
     CURLOPT_HTTPHEADER => [

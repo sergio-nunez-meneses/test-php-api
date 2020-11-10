@@ -50,7 +50,7 @@ abstract class DatabaseModel
   {
     $this->pdo = new PDO('mysql:host=' . DB_HOST . ';charset=' . DB_CHAR, DB_USER, DB_PWD);
 
-    if (empty($this->pdo) === false)
+    if (!empty($this->pdo))
     {
       $this->pdo->exec('CREATE DATABASE IF NOT EXISTS' . DB_NAME);
       $result = $this->pdo->exec('use' . DB_NAME);
