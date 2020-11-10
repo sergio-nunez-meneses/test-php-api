@@ -31,6 +31,7 @@ if (!authenticate()) {
 
 PersonController::route_request($request_method, $user_id);
 
+// create a middleware
 function authenticate() {
   try {
     switch (true) {
@@ -54,7 +55,6 @@ function authenticate() {
     }
 
     list($header, $payload, $signature) = explode('.', $matches[1]);
-
     $plainHeader = base64_decode($header);
     echo "Header:\n$plainHeader\n\n";
     $plainPayload = base64_decode($payload);
@@ -65,7 +65,7 @@ function authenticate() {
     // get token id
     // $kid = json_decode($plainHeader, true);
     // validate it
-    // if ($kid['kid'] === '')
+    // if ($kid['kid'] not empty && $kid['kid'] is equal to key in OKTAISSUER . '/v1/keys') allow access
 
     return true;
   } catch (\Exception $e) {
