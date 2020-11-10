@@ -1,7 +1,6 @@
 <?php
 require_once('../include/class_autoloader.php');
 require('../tools/okta.php');
-use \Okta\JwtVerifier\JwtVerifierBuilder;
 
 // handle Cross origin resource sharing (CORS)
 header('Access-Control-Allow-Origin: *'); // allow all requests from all origins
@@ -54,16 +53,21 @@ function authenticate() {
       throw new \Exception('No Bearer Token');
     }
 
-    // $jwt_verifier = (new \Okta\JwtVerifier\JwtVerifierBuilder())
-    //   ->setIssuer(OKTAISSUER)
-    //   ->setAudience(OKTAAUDIENCE)
-    //   ->setClientId(OKTACLIENTID)
-    //   ->build();
+    list($header, $payload, $signature) = explode('.', $matches[1]);
 
-    // return $jwt_verifier->verify($matches[1]);
+    $plainHeader = base64_decode($header);
+    echo "Header:\n$plainHeader\n\n";
+    $plainPayload = base64_decode($payload);
+    echo "Payload:\n$plainPayload\n\n";
+    $plainSignature = base64_decode($signature);
+    echo "Signature:\n$signature\n\n";
 
-    var_dump($matches[1]);
-    return $matches[1];
+    // get token id
+    // $kid = json_decode($plainHeader, true);
+    // validate it
+    // if ($kid['kid'] === '')
+
+    return true;
   } catch (\Exception $e) {
     return false;
   }

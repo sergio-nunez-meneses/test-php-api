@@ -1,14 +1,11 @@
 <?php
-
 require('../tools/okta.php');
 
 $client_id = OKTACLIENTID;
 $client_secret = OKTASECRET;
 $scope = SCOPE;
 $issuer = OKTAISSUER;
-
 $curl_options = [];
-
 $get_token = obtain_token($issuer, $client_id, $client_secret, $scope);
 
 // test requests
@@ -33,7 +30,7 @@ function obtain_token($issuer, $client_id, $client_secret, $scope) {
     CURLOPT_POST => 1,
     CURLOPT_POSTFIELDS => $payload,
     CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_SSL_VERIFYPEER => false, // fiexd bug 'Curl failed with error #60'
+    CURLOPT_SSL_VERIFYPEER => false, // fixed bug 'Curl failed with error #60'
     CURLOPT_VERBOSE => TRUE
   ];
 
@@ -58,8 +55,8 @@ function obtain_token($issuer, $client_id, $client_secret, $scope) {
       exit("Failed, exiting.\n");
     }
 
-    echo "Success!\n";
-    curl_close($ch);
+    echo "Success!\n\n";
+    // curl_close($ch);
     return $response['token_type'] . ' ' . $response['access_token'];
   } catch (\Exception $e) {
     trigger_error(sprintf(
