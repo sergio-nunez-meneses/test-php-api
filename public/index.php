@@ -31,6 +31,18 @@ if (!authenticate()) {
 
 PersonController::route_request($request_method, $user_id);
 
+function decode_token_structure($array) {
+  return json_decode(base64_decode($array), true);
+}
+
+function base64_url_encode($input) {
+  return str_replace(
+    ['+', '/', '='],
+    ['-', '_', ''],
+    base64_encode($input)
+  );
+}
+
 // create a middleware
 function authenticate() {
   try {
@@ -51,16 +63,48 @@ function authenticate() {
     preg_match('/Bearer\s(\S+)/', $auth_header, $matches);
 
     if (!isset($matches[1])) {
-      throw new \Exception('No Bearer Token');
+      throw new \Exception('No Bearer Token found.');
+    }
+
+    if (!stristr($matches[1], '.')) {
+      throw new \Exception("Token doesn't contain expected delimiter.");
     }
 
     list($header, $payload, $signature) = explode('.', $matches[1]);
-    $plainHeader = base64_decode($header);
-    echo "Header:\n$plainHeader\n\n";
-    $plainPayload = base64_decode($payload);
-    echo "Payload:\n$plainPayload\n\n";
-    $plainSignature = base64_decode($signature);
-    echo "Signature:\n$signature\n\n";
+    $decoded_header = decode_token_structure($header);
+    echo "\n\nHeader:\n\n";
+    var_dump($decoded_header);
+    $decoded_payload = decode_token_structure($payload);
+    echo "\n\nPayload:\n\n";
+    var_dump($decoded_payload);
+
+    if ($decoded_header['alg'] != 'RS256') {
+      throw new \Exception('Token was generated through an unsupported algorithm.');
+    }
+
+		if ($decoded_payload['iat'] > time()) {
+      throw new \Exception('Token was issued in the future (well played Jonas Kahnwald).');
+    }
+
+		if ($decoded_payload['exp'] < time()) {
+      throw new \Exception('Token expired.');
+    }
+
+    if (OKTAAUDIENCE !== "" && $decoded_payload['aud'] !== "") {
+      if (OKTAAUDIENCE !== $decoded_payload['aud']) {
+        throw new \Exception("Token doesn't contain expected audience.");
+      }
+    }
+
+    if (OKTACLIENTID !== "" && $decoded_payload['cid'] !== "") {
+      if (OKTACLIENTID !== $decoded_payload['cid']) {
+        throw new \Exception("Token doesn't contain expected client ID.");
+      }
+    }
+
+    if (OKTAISSUER !== $decoded_payload['iss']) {
+      throw new \Exception("Token doesn't contain expected issuer.");
+    }
 
     // get token id
     // $kid = json_decode($plainHeader, true);

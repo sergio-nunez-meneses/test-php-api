@@ -8,12 +8,8 @@ $issuer = OKTAISSUER;
 $curl_options = [];
 $token = obtain_token($issuer, $client_id, $client_secret, $scope);
 
-// test requests
-get_all_users($token);
-get_user($token, 2);
-
 function obtain_token($issuer, $client_id, $client_secret, $scope) {
-  echo "Obtaining token...\n\n";
+  echo "\nObtaining token...\n";
 
   // set up request
   $uri = $issuer . '/v1/token';
@@ -39,7 +35,7 @@ function obtain_token($issuer, $client_id, $client_secret, $scope) {
     $ch = curl_init($uri);
 
     if ($ch === false) {
-      throw new \Exception("Failed to initialize request\n");
+      throw new \Exception("\nFailed to initialize request.\n");
     }
 
     curl_setopt_array($ch, $curl_opts);
@@ -52,22 +48,22 @@ function obtain_token($issuer, $client_id, $client_secret, $scope) {
     $response = json_decode($response, true);
 
     if (!isset($response['access_token']) || !isset($response['token_type'])) {
-      exit("Failed, exiting.\n");
+      exit("\nFailed, exiting.\n");
     }
 
-    echo "Success!\n\n";
+    echo "\nSuccess!\n";
     // curl_close($ch);
     return $response['token_type'] . ' ' . $response['access_token'];
   } catch (\Exception $e) {
     trigger_error(sprintf(
         'Curl failed with error #%d: %s',
-        $e->getCode(), $e->getMessage()),
-        E_USER_ERROR);
+        $e->getCode(), $e->getMessage()
+      ), E_USER_ERROR);
   }
 }
 
 function get_all_users($token) {
-  echo "Getting all users...\n\n";
+  echo "\n\nGetting all users...\n\n";
   $curl_opts = [
     CURLOPT_URL => 'http://127.0.0.1:8000/person',
     CURLOPT_HTTPHEADER => [
@@ -81,7 +77,7 @@ function get_all_users($token) {
     $ch = curl_init();
 
     if ($ch === false) {
-      throw new \Exception("Failed to initialize request\n");
+      throw new \Exception("\nFailed to initialize request.\n");
     }
 
     curl_setopt_array($ch, $curl_opts);
@@ -89,12 +85,12 @@ function get_all_users($token) {
 
     var_dump($response);
   } catch (\Exception $e) {
-    echo $e->getMessage();
+    echo $e->getMessage() . "\n\n";
   }
 }
 
 function get_user($token, $id) {
-  echo "Getting user id#$id...\n\n";
+  echo "\n\nGetting user id#$id...\n\n";
   $curl_opts = [
     CURLOPT_URL => "http://127.0.0.1:8000/person/$id",
     CURLOPT_HTTPHEADER => [
@@ -108,7 +104,7 @@ function get_user($token, $id) {
     $ch = curl_init();
 
     if ($ch === false) {
-      throw new \Exception("Failed to initialize request\n");
+      throw new \Exception("Failed to initialize request.\n");
     }
 
     curl_setopt_array($ch, $curl_opts);
@@ -116,6 +112,10 @@ function get_user($token, $id) {
 
     var_dump($response);
   } catch (\Exception $e) {
-    echo $e->getMessage();
+    echo $e->getMessage() . "\n\n";
   }
 }
+
+// test requests
+get_all_users($token);
+get_user($token, 2);
