@@ -35,11 +35,11 @@ function decode_token_structure($array) {
   return json_decode(base64_decode($array), true);
 }
 
-function base64_url_encode($input) {
+function base64_url_encode($string) {
   return str_replace(
     ['+', '/', '='],
     ['-', '_', ''],
-    base64_encode($input)
+    base64_encode($string)
   );
 }
 
@@ -70,6 +70,7 @@ function authenticate() {
       throw new \Exception("Token doesn't contain expected delimiter.");
     }
 
+    // decompose and decode token structure
     list($header, $payload, $signature) = explode('.', $matches[1]);
     $decoded_header = decode_token_structure($header);
     echo "\n\nHeader:\n\n";
@@ -105,6 +106,21 @@ function authenticate() {
     if (OKTAISSUER !== $decoded_payload['iss']) {
       throw new \Exception("Token doesn't contain expected issuer.");
     }
+
+    $keys = json_decode(file_get_contents(json_decode(file_get_contents($decoded_payload['iss'] . '/.well-known/oauth-authorization-server', false, stream_context_create([
+      'http'=>[
+        'method'=>'GET',
+        // 'header'=>''
+      ]
+    ])), 1)['jwks_uri'], false, stream_context_create([
+      'http'=>[
+        'method'=>'GET',
+        // 'header'=>''
+      ]
+    ])), 1)['keys'];
+
+    echo "\n\nKeys:\n\n";
+    var_dump($keys);
 
     // get token id
     // $kid = json_decode($plainHeader, true);

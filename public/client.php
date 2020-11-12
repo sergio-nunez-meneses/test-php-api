@@ -6,9 +6,9 @@ $client_secret = OKTASECRET;
 $scope = SCOPE;
 $issuer = OKTAISSUER;
 $curl_options = [];
-$token = obtain_token($issuer, $client_id, $client_secret, $scope);
+$token = get_token($issuer, $client_id, $client_secret, $scope);
 
-function obtain_token($issuer, $client_id, $client_secret, $scope) {
+function get_token($issuer, $client_id, $client_secret, $scope) {
   echo "\nObtaining token...\n";
 
   // set up request
