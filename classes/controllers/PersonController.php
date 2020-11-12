@@ -38,6 +38,7 @@ class PersonController
           break;
 
     }
+    
     if (isset($response) && $response['body'])
     {
       header($response['status_code_header']);

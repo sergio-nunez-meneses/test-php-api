@@ -8,35 +8,12 @@ $issuer = OKTAISSUER;
 $curl_options = [];
 $token = get_token($issuer, $client_id, $client_secret, $scope);
 
-function curl_request($token, $url) {
-  $curl_opts = [
-    CURLOPT_URL => $url,
-    CURLOPT_HTTPHEADER => [
-      'Content-Type: application/json',
-      "Authorization: $token"
-    ],
-    CURLOPT_RETURNTRANSFER => true
-  ];
-
-  try {
-    $ch = curl_init();
-
-    if ($ch === false) {
-      throw new \Exception("\nFailed to initialize request.\n");
-    }
-
-    curl_setopt_array($ch, $curl_opts);
-    $response = curl_exec($ch);
-    curl_close($ch);
-
-    var_dump($response);
-  } catch (\Exception $e) {
-    echo $e->getMessage() . "\n\n";
-  }
-}
+// test requests
+get_all_users($token);
+get_user($token, 3);
 
 function get_token($issuer, $client_id, $client_secret, $scope) {
-  echo "\nObtaining token...\n";
+  echo "\n\nObtaining token...\n\n";
 
   // set up request
   $uri = $issuer . '/v1/token';
@@ -62,7 +39,7 @@ function get_token($issuer, $client_id, $client_secret, $scope) {
     $ch = curl_init($uri);
 
     if ($ch === false) {
-      throw new \Exception("\nFailed to initialize request.\n");
+      throw new \Exception('Failed to initialize request.');
     }
 
     curl_setopt_array($ch, $curl_opts);
@@ -75,10 +52,10 @@ function get_token($issuer, $client_id, $client_secret, $scope) {
     $response = json_decode($response, true);
 
     if (!isset($response['access_token']) || !isset($response['token_type'])) {
-      exit("\nFailed, exiting.\n");
+      throw new Exception('Failed, exiting.');
     }
 
-    echo "\nSuccess!\n";
+    echo "\n\nSuccess!\n\n";
     curl_close($ch);
     return $response['token_type'] . ' ' . $response['access_token'];
   } catch (\Exception $e) {
@@ -86,6 +63,37 @@ function get_token($issuer, $client_id, $client_secret, $scope) {
         'Curl failed with error #%d: %s',
         $e->getCode(), $e->getMessage()
       ), E_USER_ERROR);
+  }
+}
+
+function curl_request($token, $url) {
+  $curl_opts = [
+    CURLOPT_URL => $url,
+    CURLOPT_HTTPHEADER => [
+      'Content-Type: application/json',
+      "Authorization: $token"
+    ],
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_VERBOSE => TRUE
+  ];
+
+  try {
+    $ch = curl_init();
+
+    if ($ch === false) {
+      throw new \Exception("Failed to initialize request.");
+    }
+
+    curl_setopt_array($ch, $curl_opts);
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    var_dump(json_decode($response, true));
+  } catch (\Exception $e) {
+    trigger_error(sprintf(
+      'Curl failed with error #%d: %s',
+      $e->getCode(), $e->getMessage()
+    ), E_USER_ERROR);
   }
 }
 
@@ -98,7 +106,3 @@ function get_user($token, $id) {
   echo "\n\nGetting user id#$id...\n\n";
   curl_request($token, "http://127.0.0.1:8000/person/$id");
 }
-
-// test requests
-get_all_users($token);
-get_user($token, 3);

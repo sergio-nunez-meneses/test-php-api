@@ -1,6 +1,6 @@
 <?php
 require_once('../include/class_autoloader.php');
-require('../middleware/token_verification.php');
+// require('../middleware/token_verification.php');
 
 // handle Cross origin resource sharing (CORS)
 header('Access-Control-Allow-Origin: *'); // allow all requests from all origins
@@ -24,7 +24,7 @@ if (isset($uri[2])) {
 }
 
 // request authentication with okta
-if (!authenticate()) {
+if (!(new TokenController)->authenticate()) {
   header('HTTP/1.1 401 Unauthorized');
   exit('Unauthorized');
 }
