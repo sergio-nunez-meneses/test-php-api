@@ -123,11 +123,11 @@ function authenticate() {
   // deconstruct and decode token structure
   list($header, $payload, $signature) = explode('.', $matches[1]);
   $decoded_header = decode_token_structure($header);
-  echo "\n\nHeader:\n\n";
-  var_dump($decoded_header);
+  // echo "\n\nHeader:\n\n";
+  // var_dump($decoded_header);
   $decoded_payload = decode_token_structure($payload);
-  echo "\n\nPayload:\n\n";
-  var_dump($decoded_payload);
+  // echo "\n\nPayload:\n\n";
+  // var_dump($decoded_payload);
 
   if ($decoded_header['alg'] != 'RS256') {
     throw new \Exception('Token was generated through an unsupported algorithm.');
@@ -169,8 +169,8 @@ function authenticate() {
     ]
   ])), 1)['keys'];
 
-  echo "\n\nKeys:\n\n";
-  var_dump($keys);
+  // echo "\n\nKeys:\n\n";
+  // var_dump($keys);
 
   foreach($keys as $key) {
     if ($key['kid'] !== $decoded_header['kid']) {
@@ -180,11 +180,11 @@ function authenticate() {
     }
   }
 
-  echo "\nPublic key generated:\n\n";
-  var_dump($public_key);
+  // echo "\nPublic key generated:\n\n";
+  // var_dump($public_key);
 
   if (openssl_verify("$header.$payload", base64_url_decode($signature), $public_key, OPENSSL_ALGO_SHA256)) {
-    echo "Token's signature verified!";
+    // echo "Token's signature verified!";
     return true;
   } else {
     throw new \Exception("Token's signature couldn't be verified.");
