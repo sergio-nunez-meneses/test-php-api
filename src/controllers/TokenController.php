@@ -7,7 +7,7 @@ class TokenController
 {
   public function authenticate()
   {
-    // check for token in HTTP headers
+    // check authorization HTTP headers
     switch (true)
     {
       case array_key_exists('HTTP_AUTHORIZATION', $_SERVER):

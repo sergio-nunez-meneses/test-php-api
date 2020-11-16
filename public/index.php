@@ -1,6 +1,8 @@
 <?php
 require_once('../include/class_autoloader.php');
 
+// start server: php -S 127.0.0.1:8000 -t public
+
 // handle Cross origin resource sharing (CORS)
 header('Access-Control-Allow-Origin: *'); // allow all requests from all origins
 header('Content-Type: application/json; charset=UTF-8');

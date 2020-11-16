@@ -11,6 +11,6 @@ function class_autoloader($class_name) {
     $parent_folder = 'controllers';
   }
 
-  $path = "../classes/$parent_folder/$class_name.php";
+  $path = "../src/$parent_folder/$class_name.php";
   require_once($path);
 }
