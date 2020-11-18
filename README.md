@@ -10,7 +10,7 @@ GRANT ALL on database_name.* to 'username'@'localhost';
 quit
 ```
 
-Next, create the file ```sql.php``` and fill it with the following information:
+Next, create the folder ```tools```, and create inside the file ```sql.php``` and fill it with the following information:
 ```php
 <?php
 define('DB_NAME', 'database_name');
@@ -22,7 +22,7 @@ define('DB_PWD', 'password');
 define('PDO_OPTIONS', []);
 ```
 
-Finally, having already created an [Okta account](https://developer.okta.com/signup/), create the file ```okta.php``` and fill it with your personal account information:
+Finally, having already created an [Okta account](https://developer.okta.com/signup/), create the file ```okta.php``` in the same folder and fill it with your personal account information:
 ```php
 <?php
 define('OKTAAUDIENCE', '');
