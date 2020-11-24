@@ -22,7 +22,7 @@ define('DB_PWD', 'password');
 define('PDO_OPTIONS', []);
 ```
 
-Finally, having already created an [Okta account](https://developer.okta.com/signup/), create the file ```okta.php``` in the same folder and fill it with your personal account information:
+Having already created an [Okta account](https://developer.okta.com/signup/), create the file ```okta.php``` in the same folder and fill it with your personal account information:
 ```php
 <?php
 define('OKTAAUDIENCE', '');
@@ -30,4 +30,10 @@ define('OKTAISSUER', '');
 define('SCOPE', '');
 define('OKTACLIENTID', '');
 define('OKTASECRET', '');
+```
+
+Finally, to test the Okta authorization, copy and paste the following command lines in your terminal:
+```
+cd public
+php client.php
 ```
