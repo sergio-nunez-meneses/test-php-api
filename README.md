@@ -32,8 +32,7 @@ define('OKTACLIENTID', '');
 define('OKTASECRET', '');
 ```
 
-Finally, to test the Okta authorization, copy and paste the following command lines in your terminal:
+Finally, to test the Okta authorization, change directory to ```public``` and paste the following line in your terminal:
 ```
-cd public
 php client.php
 ```
